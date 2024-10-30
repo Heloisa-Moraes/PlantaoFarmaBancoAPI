@@ -1,16 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-
 const app = express();
-const PORT = process.env.PORT || 3000; // A Vercel usa 3000 por padrão
+const PORT = process.env.PORT || 8080;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-const MONGODB_URI = process.env.MONGODB_URI; // Coloque sua URI do MongoDB aqui
-
-mongoose.connect(MONGODB_URI)
+// Conexão com o MongoDB
+const MONGODB_URI = 'mongodb+srv://lucasolivato:2eEen56rtYSwjUwP@plantaofarmadb.bluqj.mongodb.net/?retryWrites=true&w=majority&appName=plantaoFarmaDB';
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log('Conectado ao MongoDB!');
         app.listen(PORT, () => {
@@ -22,7 +22,7 @@ mongoose.connect(MONGODB_URI)
         process.exit(1);
     });
 
-// Definindo um modelo básico
+// Definindo o modelo de farmácia
 const farmaciaSchema = new mongoose.Schema({
     nome: { type: String, required: true },
     endereco: { type: String, required: true },
@@ -38,15 +38,15 @@ const farmaciaSchema = new mongoose.Schema({
 
 const Farmacia = mongoose.model('Farmacia', farmaciaSchema);
 
-// Rota para testar a API
+// Rotas
 app.get('/api/test', (req, res) => {
     res.send('API está funcionando!');
 });
 
-// Rota para buscar farmácias
 app.get('/api/farmacias', async (req, res) => {
     try {
         const farmacias = await Farmacia.find();
+        console.log('Farmácias encontradas:', farmacias);
         res.json(farmacias);
     } catch (error) {
         console.error('Erro ao buscar farmácias:', error);
