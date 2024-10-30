@@ -2,14 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
+// Configura o strictQuery
+mongoose.set('strictQuery', false); // ou true, dependendo do seu caso
+
 // Conexão com o MongoDB
-const MONGODB_URI = 'mongodb+srv://lucasolivato:2eEen56rtYSwjUwP@plantaofarmadb.bluqj.mongodb.net/?retryWrites=true&w=majority&appName=plantaoFarmaDB';
+const MONGODB_URI = 'mongodb+srv://lucasolivato:2eEen56rtYSwjUwP@plantaofarmadb.bluqj.mongodb.net/plantaoFarmaDB?retryWrites=true&w=majority';
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log('Conectado ao MongoDB!');
@@ -36,7 +39,7 @@ const farmaciaSchema = new mongoose.Schema({
     plantao: { type: [Date] }
 });
 
-const Farmacia = mongoose.model('Farmacia', farmaciaSchema);
+const Farmacia = mongoose.model('Farmacia', farmaciaSchema, 'Farmacias'); // ou 'farmacias'
 
 // Rotas
 app.get('/api/test', (req, res) => {
