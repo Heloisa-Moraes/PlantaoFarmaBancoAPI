@@ -1,3 +1,5 @@
+require('dotenv').config(); // Carrega as variáveis do .env
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -9,10 +11,10 @@ app.use(cors());
 app.use(express.json());
 
 // Configura o strictQuery
-mongoose.set('strictQuery', false); // ou true, dependendo do seu caso
+mongoose.set('strictQuery', false);
 
 // Conexão com o MongoDB
-const MONGODB_URI = 'mongodb+srv://lucasolivato:2eEen56rtYSwjUwP@plantaofarmadb.bluqj.mongodb.net/plantaoFarmaDB?retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI;
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log('Conectado ao MongoDB!');
@@ -39,7 +41,7 @@ const farmaciaSchema = new mongoose.Schema({
     plantao: { type: [Date] }
 });
 
-const Farmacia = mongoose.model('Farmacia', farmaciaSchema, 'Farmacias'); // ou 'farmacias'
+const Farmacia = mongoose.model('Farmacia', farmaciaSchema, 'Farmacias');
 
 // Rotas
 app.get('/api/test', (req, res) => {
